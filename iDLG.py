@@ -169,8 +169,8 @@ def main():
                     gt_data = tmp_datum
                     gt_label = tmp_label
                 else:
-                    gt_data = torch.cat((gt_data, tmp_datum), dim=0, device=device)
-                    gt_label = torch.cat((gt_label, tmp_label), dim=0, device=device)
+                    gt_data = torch.cat((gt_data, tmp_datum), dim=0)
+                    gt_label = torch.cat((gt_label, tmp_label), dim=0)
 
 
             # compute original gradient
@@ -204,7 +204,7 @@ def main():
                         dummy_loss = - torch.sum(torch.softmax(dummy_label, -1) * torch.log(torch.softmax(pred, -1)))
                         # dummy_loss = criterion(pred, gt_label)
                     elif method == 'iDLG':
-                        dummy_loss = criterion(pred, torch.argmin(dy_dx[-1], dim=-1).detach().reshape((1,)).requires_grad_(False))
+                        dummy_loss = criterion(pred, torch.argmin(torch.sum(original_dy_dx[-2], dim=-1), dim=-1).detach().reshape((1,)).requires_grad_(False))
                     else:
                         exit('unknown method')
                     dummy_dy_dx = torch.autograd.grad(dummy_loss, net.parameters(), create_graph=True)
@@ -254,7 +254,7 @@ def main():
                 mse_DLG = mses
             elif method == 'iDLG':
                 loss_iDLG = losses
-                label_iDLG = torch.argmin(dy_dx[-1], dim=-1).detach().item()
+                label_iDLG = torch.argmin(torch.sum(original_dy_dx[-2], dim=-1), dim=-1).detach().item()
                 mse_iDLG = mses
             else:
                 exit('unknown method')
