@@ -88,7 +88,7 @@ def main():
     save_path = os.path.join(root_path, 'results/iDLG_%s'%dataset).replace('\\', '/')
     
     lr = 1.0
-    num_syn = 1
+    num_dummy = 1
     Iteration = 300
     num_exp = 1000
 
@@ -152,12 +152,12 @@ def main():
         idx_shuffle = np.random.permutation(len(dst))
 
         for method in ['DLG', 'iDLG']:
-            print('%s, Try to generate %d images' % (method, num_syn))
+            print('%s, Try to generate %d images' % (method, num_dummy))
 
             criterion = nn.CrossEntropyLoss().to(device)
             imidx_list = []
 
-            for imidx in range(num_syn):
+            for imidx in range(num_dummy):
                 idx = idx_shuffle[imidx]
                 imidx_list.append(idx)
                 tmp_datum = tt(dst[idx][0]).float().to(device)
@@ -224,10 +224,10 @@ def main():
                 if iters % int(Iteration / 30) == 0:
                     current_time = str(time.strftime("[%Y-%m-%d %H:%M:%S]", time.localtime()))
                     print(current_time, iters, 'loss = %.8f, mse = %.8f' %(current_loss, mses[-1]))
-                    history.append([tp(dummy_data[imidx].cpu()) for imidx in range(num_syn)])
+                    history.append([tp(dummy_data[imidx].cpu()) for imidx in range(num_dummy)])
                     history_iters.append(iters)
 
-                    for imidx in range(num_syn):
+                    for imidx in range(num_dummy):
                         plt.figure(figsize=(12, 8))
                         plt.subplot(3, 10, 1)
                         plt.imshow(tp(gt_data[imidx].cpu()))
