@@ -22,3 +22,14 @@ label as opposed to DLG which extracts wrong labels frequently.
 
 <br><br>
 <div align=center><img src="https://github.com/PatrickZH/Improved-Deep-Leakage-from-Gradients/blob/master/Figure2.png"/></div>
+<br><br>
+
+## Cite <br>
+```
+@article{zhao2020idlg,
+  title={iDLG: Improved Deep Leakage from Gradients},
+  author={Zhao, Bo and Mopuri, Konda Reddy and Bilen, Hakan},
+  journal={arXiv preprint arXiv:2001.02610},
+  year={2020}
+}
+```
