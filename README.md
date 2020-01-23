@@ -1,2 +1,12 @@
 # Improved-Deep-Leakage-from-Gradients
 The code for "[Improved Deep Leakage from Gradients](https://arxiv.org/pdf/2001.02610.pdf)" (iDLG).
+
+## Abstract <br>
+It is widely believed that sharing gradients will not leak private training data in distributed learning systems such as Collaborative Learning and Federated Learning, etc. Recently, Zhu et al. [1] presented an approach which shows the possibility to obtain private training data from the publicly shared gradients. In their Deep Leakage from Gradient (DLG) method, they synthesize the dummy data and corresponding labels with the supervision of shared gradients. However, DLG has difficulty in convergence and discovering the ground-truth labels consistently. In this paper, we find that sharing gradients definitely leaks the ground-truth labels. We propose a simple but reliable approach to extract accurate data from the gradients. Particularly, our approach can certainly extract the ground-truth labels as opposed to DLG, hence we name it Improved DLG (iDLG). Our approach is valid for any differentiable model trained with cross-entropy loss over one-hot labels. We mathematically illustrate how our method can extract ground-truth labels from the gradients and empirically demonstrate the advantages over DLG. <br>
+
+<br><br>
+<div align=center><img src="https://github.com/PatrickZH/Improved-Deep-Leakage-from-Gradients/blob/master/Figure1.png"/></div>
+
+
+<br><br>
+<div align=center><img src="https://github.com/PatrickZH/Improved-Deep-Leakage-from-Gradients/blob/master/Figure2.png"/></div>
