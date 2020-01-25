@@ -243,8 +243,7 @@ def main():
                         elif method == 'iDLG':
                             plt.savefig('%s/iDLG_on_%s_%05d.png' % (save_path, imidx_list, imidx_list[imidx]))
                             plt.close()
-                        else:
-                            exit('unknown method')
+
                     if current_loss < 0.000001: # converge
                         break
 
