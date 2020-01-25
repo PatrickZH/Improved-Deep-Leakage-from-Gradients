@@ -115,12 +115,14 @@ def main():
         num_classes = 10
         channel = 1
         hidden = 588
+        dst = datasets.MNIST(data_path, download=False)
 
     elif dataset == 'cifar100':
         shape_img = (32, 32)
         num_classes = 100
         channel = 3
         hidden = 768
+        dst = datasets.CIFAR100(data_path, download=False)
 
 
     elif dataset == 'lfw':
@@ -129,17 +131,12 @@ def main():
         channel = 3
         hidden = 768
         lfw_path = os.path.join(root_path, '../data/lfw')
+        dst = lfw_dataset(lfw_path, shape_img)
 
     else:
         exit('unknown dataset')
 
 
-    if dataset == 'MNIST':
-        dst = datasets.MNIST(data_path, download=False)
-    elif dataset == 'cifar100':
-        dst = datasets.CIFAR100(data_path, download=False)
-    elif dataset == 'lfw':
-        dst = lfw_dataset(lfw_path, shape_img)
 
 
     ''' train DLG and iDLG '''
@@ -147,7 +144,7 @@ def main():
         net = LeNet(channel=channel, hideen=hidden, num_classes=num_classes)
         net.apply(weights_init)
 
-        print('processing %d|%d net'%(idx_net, num_exp))
+        print('running %d|%d experiment'%(idx_net, num_exp))
         net = net.to(device)
         idx_shuffle = np.random.permutation(len(dst))
 
@@ -203,10 +200,14 @@ def main():
                         dummy_loss = - torch.mean(torch.sum(torch.softmax(dummy_label, -1) * torch.log(torch.softmax(pred, -1)), dim=-1))
                         # dummy_loss = criterion(pred, gt_label)
                     elif method == 'iDLG':
-                        dummy_loss = criterion(pred, torch.argmin(torch.sum(original_dy_dx[-2], dim=-1), dim=-1).detach().reshape((1,)).requires_grad_(False))
-                    else:
-                        exit('unknown method')
+                        label_pred = torch.argmin(torch.sum(original_dy_dx[-2], dim=-1), dim=-1).detach().reshape((1,)).requires_grad_(False)
+                        dummy_loss = criterion(pred, label_pred)
+
                     dummy_dy_dx = torch.autograd.grad(dummy_loss, net.parameters(), create_graph=True)
+
+                    # Scrupulously, we cannot access gradients of outputs.
+                    # original_dy_dx = original_dy_dx[:-1]
+                    # dummy_dy_dx = dummy_dy_dx[:-1]
 
                     grad_diff = 0
                     for gx, gy in zip(dummy_dy_dx, original_dy_dx):
@@ -253,10 +254,9 @@ def main():
                 mse_DLG = mses
             elif method == 'iDLG':
                 loss_iDLG = losses
-                label_iDLG = torch.argmin(torch.sum(original_dy_dx[-2], dim=-1), dim=-1).detach().item()
+                label_iDLG = label_pred.item()
                 mse_iDLG = mses
-            else:
-                exit('unknown method')
+
 
 
         print('imidx_list:', imidx_list)
