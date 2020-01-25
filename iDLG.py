@@ -183,6 +183,8 @@ def main():
                 optimizer = torch.optim.LBFGS([dummy_data, dummy_label], lr=lr)
             elif method == 'iDLG':
                 optimizer = torch.optim.LBFGS([dummy_data, ], lr=lr)
+                # predict the ground-truth label
+                label_pred = torch.argmin(torch.sum(original_dy_dx[-2], dim=-1), dim=-1).detach().reshape((1,)).requires_grad_(False)
 
             history = []
             history_iters = []
@@ -200,13 +202,11 @@ def main():
                         dummy_loss = - torch.mean(torch.sum(torch.softmax(dummy_label, -1) * torch.log(torch.softmax(pred, -1)), dim=-1))
                         # dummy_loss = criterion(pred, gt_label)
                     elif method == 'iDLG':
-                        label_pred = torch.argmin(torch.sum(original_dy_dx[-2], dim=-1), dim=-1).detach().reshape((1,)).requires_grad_(False)
                         dummy_loss = criterion(pred, label_pred)
 
                     dummy_dy_dx = torch.autograd.grad(dummy_loss, net.parameters(), create_graph=True)
 
-                    # Scrupulously, we cannot access gradients of outputs.
-                    # original_dy_dx = original_dy_dx[:-1]
+                    # # Scrupulously, we cannot access gradients of outputs.
                     # dummy_dy_dx = dummy_dy_dx[:-1]
 
                     grad_diff = 0
