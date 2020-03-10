@@ -206,9 +206,6 @@ def main():
 
                     dummy_dy_dx = torch.autograd.grad(dummy_loss, net.parameters(), create_graph=True)
 
-                    # # Scrupulously, we cannot access gradients of outputs.
-                    # dummy_dy_dx = dummy_dy_dx[:-1]
-
                     grad_diff = 0
                     for gx, gy in zip(dummy_dy_dx, original_dy_dx):
                         grad_diff += ((gx - gy) ** 2).sum()
