@@ -33,7 +33,7 @@ label as opposed to DLG which extracts wrong labels frequently.
   year={2020}
 }
 ```
-
+<br> <br>
 
 ## Our further work <br>
 We further leveraged gradient matching to condense the large training set - [Dataset Condensation with Gradient Matching](https://openreview.net/forum?id=mSAKhLYLSsl). <br>
@@ -43,3 +43,5 @@ Our experiments show that we can condense large training sets into tiny syntheti
  :-: | :-: | :-: | :-: | :-:
 | 1 img/cls  | 91.7 | 70.5 | 31.2 | 28.3 |
 | 10 img/cls | 97.4 | 82.3 | 76.1 | 44.9 |
+
+Table 2: Testing accuracies (%) of deep neural networks trained on 1 or 10 synthetic image(s)/class.
