@@ -33,3 +33,13 @@ label as opposed to DLG which extracts wrong labels frequently.
   year={2020}
 }
 ```
+
+
+## Our further work <br>
+We further leveraged gradient matching to condense the large training set - [Dataset Condensation with Gradient Matching](https://openreview.net/forum?id=mSAKhLYLSsl). <br>
+Code can be found in [Code](https://github.com/VICO-UoE/DatasetCondensation). <br>
+Our experiments show that we can condense large training sets into tiny synthetic ones and obtain good generalization ability when train arbitrary randomly initialized deep networks with them.  <br>
+|  | MNIST | FashionMNIST | SVHN | CIFAR10 |
+ :-: | :-: | :-: | :-: | :-:
+| 1 img/cls  | 91.7 | 70.5 | 31.2 | 28.3 |
+| 10 img/cls | 97.4 | 82.3 | 76.1 | 44.9 |
